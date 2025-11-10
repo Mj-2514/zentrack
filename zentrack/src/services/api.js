@@ -25,13 +25,19 @@ export const habitsAPI = {
   deleteHabit: (id) => api.delete(`/habits/${id}`)
 }
 
-// Entries API
+// Entries API - UPDATED to match backend routes
 export const entriesAPI = {
   // Create entry
-  createEntry: (entryData) => api.post('/entries', entryData),
+  createEntry: (entryData) => api.post('/entries/add', entryData),
+  
+  // Get all entries for logged-in user - FIXED: using '/all' endpoint
+  getAllEntries: () => api.get('/entries/all'),
   
   // Get entries by habit
-  getEntriesByHabit: (habitId) => api.get(`/entries/${habitId}`)
+  getEntriesByHabit: (habitId) => api.get(`/entries/${habitId}`),
+  
+  // Optional: Delete entry if needed
+  deleteEntry: (id) => api.delete(`/entries/${id}`)
 }
 
 // Auth API
