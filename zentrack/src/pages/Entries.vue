@@ -227,16 +227,36 @@ const completionRate = computed(() => {
 // Methods
 const loadEntries = async () => {
   loading.value = true
+  console.log("🔄 Fetching entries...")
+
   try {
-    // In a real app, you'd filter by date
-    const response = await entriesAPI.getEntriesByHabit('all') // You might need to adjust this
-    entries.value = response.data
+    const response = await entriesAPI.getAllEntries()
+    console.log("✅ API Response:", response)
+
+    if (Array.isArray(response.data)) {
+      entries.value = response.data
+      console.log("📋 Entries fetched:", entries.value)
+    } else {
+      console.warn("⚠️ Unexpected data format:", response.data)
+    }
+
   } catch (error) {
-    console.error('Failed to load entries:', error)
+    console.error("❌ Failed to load entries:", error)
+    if (error.response) {
+      console.error("🚨 Server responded with:", error.response.status, error.response.data)
+    } else if (error.request) {
+      console.error("📡 No response received:", error.request)
+    } else {
+      console.error("💥 Request setup error:", error.message)
+    }
+
   } finally {
     loading.value = false
+    console.log("✅ Fetch complete")
   }
 }
+
+
 
 const loadHabits = async () => {
   try {
