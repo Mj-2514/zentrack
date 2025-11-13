@@ -24,8 +24,9 @@ Users can create habits, track daily progress, and view analytics on their dashb
 ## ⚙️ Setup Instructions
 
 ### 1️⃣ Clone the repository
-for backend-
 git clone https://github.com/Mj-2514/zenTrack.git
+
+for backend-
 cd zenTrack
 cd backend
 npm i
