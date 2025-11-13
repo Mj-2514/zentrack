@@ -23,17 +23,29 @@ Users can create habits, track daily progress, and view analytics on their dashb
 
 ## ⚙️ Setup Instructions
 
-### 1️⃣ Clone the repository
 git clone https://github.com/Mj-2514/zenTrack.git
-
-for backend-
 cd zenTrack
+
+
+Backend Setup
 cd backend
-npm i
+npm install
 node server.js
 
-for frontend-
+Create a .env file inside /backend:
+
+PORT= Your_port
+MONGO_URI=Your_mongoURI
+GOOGLE_CLIENT_ID=Your_client_id
+GOOGLE_CLIENT_SECRET=Your_client_secret
+SESSION_SECRET=Your_session_secret
+
+
+Frontend Setup
+
 cd zentrack
-npm i
+npm install
 npm run dev
+
+
 
