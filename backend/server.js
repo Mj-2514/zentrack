@@ -60,8 +60,6 @@ app.get("/", (req, res) => {
 
 // ✅ Auth status endpoint
 app.get("/auth/status", (req, res) => {
-  console.log('Auth status check - isAuthenticated:', req.isAuthenticated());
-  console.log('User:', req.user);
   
   if (req.isAuthenticated()) {
     res.json({

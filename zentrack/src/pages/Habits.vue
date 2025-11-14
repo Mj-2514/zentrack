@@ -197,7 +197,7 @@ const createHabit = async () => {
 // Edit habit
 const editHabit = (habit) => {
   // Implement edit functionality
-  console.log('Edit habit:', habit)
+  
 }
 
 // Delete habit

@@ -289,16 +289,15 @@ const completionRate = computed(() => {
 // Methods
 const loadEntries = async () => {
   loading.value = true
-  console.log("🔄 Fetching entries...")
+ 
 
   try {
     const response = await entriesAPI.getAllEntries()
-    console.log("✅ API Response:", response)
+ 
 
     if (Array.isArray(response.data)) {
       entries.value = response.data
-      console.log("📋 All entries fetched:", entries.value)
-      console.log("📅 Filtered entries for today:", filteredEntries.value)
+
     } else {
       console.warn("⚠️ Unexpected data format:", response.data)
     }
@@ -315,7 +314,7 @@ const loadEntries = async () => {
 
   } finally {
     loading.value = false
-    console.log("✅ Fetch complete")
+    
   }
 }
 
@@ -323,7 +322,7 @@ const loadHabits = async () => {
   try {
     const response = await habitsAPI.getAllHabits()
     habits.value = response.data
-    console.log("📊 Habits loaded:", habits.value.length)
+
   } catch (error) {
     console.error('Failed to load habits:', error)
   }
@@ -337,7 +336,7 @@ const createEntry = async () => {
       date: selectedDate.value.toISOString()
     }
     
-    console.log("📝 Creating entry:", entryData)
+   
     const response = await entriesAPI.createEntry(entryData)
     
     // Add the new entry to our local state
@@ -347,7 +346,7 @@ const createEntry = async () => {
     newEntry.value = { habitId: '', reflection: '', mood: '' }
     showEntryForm.value = false
     
-    console.log("✅ Entry created successfully:", response.data)
+
     
   } catch (error) {
     console.error('❌ Failed to create entry:', error)
@@ -359,7 +358,7 @@ const createEntry = async () => {
 
 const editEntry = (entry) => {
   // Implement edit functionality
-  console.log('Edit entry:', entry)
+  
   // For now, just pre-fill the form for editing
   newEntry.value = {
     habitId: entry.habitId,
@@ -373,7 +372,7 @@ const deleteEntry = async (entryId) => {
   if (!confirm('Are you sure you want to delete this entry?')) return
   
   try {
-    console.log("🗑️ Deleting entry:", entryId)
+
     
     // First, check if we have the delete method in our API
     if (entriesAPI.deleteEntry) {
@@ -387,7 +386,7 @@ const deleteEntry = async (entryId) => {
     
     // Remove from local state
     entries.value = entries.value.filter(entry => entry._id !== entryId)
-    console.log("✅ Entry deleted successfully")
+    
     
   } catch (error) {
     console.error('❌ Failed to delete entry:', error)
@@ -416,14 +415,14 @@ const previousDay = () => {
   const newDate = new Date(selectedDate.value)
   newDate.setDate(newDate.getDate() - 1)
   selectedDate.value = newDate
-  console.log("⬅️ Previous day:", formattedDate.value)
+
 }
 
 const nextDay = () => {
   const newDate = new Date(selectedDate.value)
   newDate.setDate(newDate.getDate() + 1)
   selectedDate.value = newDate
-  console.log("➡️ Next day:", formattedDate.value)
+
 }
 
 // Watch for date changes to update the UI

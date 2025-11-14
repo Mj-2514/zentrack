@@ -145,8 +145,6 @@ const currentDate = computed(() =>
 const filteredUserEntries = computed(() => {
   if (!user.value || !allEntries.value.length) return []
   
-  console.log("🔍 Filtering entries for user:", user.value.id)
-  console.log("📋 All entries available:", allEntries.value)
   
   // Since your entries don't have userId, we'll use a different approach
   // Option 1: Show all entries (if that's acceptable)
@@ -157,7 +155,7 @@ const filteredUserEntries = computed(() => {
   // const userHabitIds = habits.value.filter(h => h.userId === user.value.id).map(h => h._id)
   // const entries = allEntries.value.filter(entry => userHabitIds.includes(entry.habitId))
   
-  console.log("✅ Filtered entries:", entries.length)
+  
   return entries
 })
 
@@ -167,26 +165,21 @@ const fetchDashboard = async () => {
   loading.value = true
 
   try {
-    console.log('🔄 Starting dashboard fetch for user:', user.value.id)
-    
-    // Fetch all habits
-    console.log('📊 Fetching habits...')
+   
     const habitsRes = await habitsAPI.getAllHabits()
     habits.value = habitsRes.data || []
-    console.log('✅ Habits loaded:', habits.value.length)
+
 
     // Fetch ALL entries (backend will return all since no userId filter works)
-    console.log('📝 Fetching entries...')
+    
     const entriesRes = await entriesAPI.getAllEntries()
-    console.log('📦 Raw entries response:', entriesRes)
+
     
     allEntries.value = (entriesRes.data || []).sort(
       (a, b) => new Date(b.date) - new Date(a.date)
     )
     
-    console.log('✅ All entries loaded:', allEntries.value.length)
-    console.log('👤 Current user ID:', user.value.id)
-    console.log('📋 Entries data sample:', allEntries.value.slice(0, 3))
+
 
     // Use the filtered entries for stats and display
     const entriesToUse = filteredUserEntries.value
@@ -197,7 +190,7 @@ const fetchDashboard = async () => {
     stats.value.completionRate = computeCompletionRate(entriesToUse, habits.value)
     stats.value.goalsAchieved = computeGoalsAchieved(habits.value, entriesToUse)
 
-    console.log('📈 Stats computed:', stats.value)
+
 
     // Build recent activity from filtered entries
     recentActivity.value = entriesToUse.slice(0, 5).map(entry => ({
@@ -206,7 +199,6 @@ const fetchDashboard = async () => {
       type: 'habit_completed'
     }))
 
-    console.log('🎯 Recent activity:', recentActivity.value.length)
 
   } catch (err) {
     console.error('💥 Dashboard fetch error:', err)
