@@ -1,20 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
+import { ensureAuth } from "./middleware/authMiddleware.js";
 import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
-import session from "express-session";
-import passport from "passport";
-
 import connectDB from "./config/db.js";
 import habits from "./routes/habits.js";
 import entries from "./routes/entries.js";
-import { ensureAuth } from "./middleware/authMiddleware.js";
+import session from "express-session";
+import passport from "passport";
 
 dotenv.config();
 import "./config/passport.js";
 
-// ===== CONNECT DB =====
+// Connect DB
 connectDB();
 
 const app = express();
@@ -24,11 +23,9 @@ app.use(helmet());
 app.use(compression());
 
 // ===== CORS =====
-// backend = Render
-// frontend = Vercel
 app.use(
   cors({
-    origin: "https://zentrack-rust.vercel.app",
+    origin: "https://zentrack-rust.vercel.app" || "http://localhost:5173",
     credentials: true,
   })
 );
@@ -36,16 +33,16 @@ app.use(
 app.use(express.json());
 
 // ===== SESSIONS =====
-// Render uses HTTPS → secure: true required
+// Render runs HTTPS → secure:true is SAFE
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,        // HTTPS → must be true
+      secure: true,              // because frontend uses HTTPS
       httpOnly: true,
-      sameSite: "none",    // required for cross-site cookies
+      sameSite: "none",          // required for cross-site cookies
       maxAge: 24 * 60 * 60 * 1000,
     },
   })
@@ -88,18 +85,15 @@ app.get(
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-// IMPORTANT:
-// Replace YOUR_RENDER_URL with the REAL one if different.
-const BACKEND_URL = "https://zentrack.onrender.com";
-const FRONTEND_URL = "https://zentrack-rust.vercel.app";
-
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: `${FRONTEND_URL}/login?error=auth_failed`,
+    failureRedirect: "https://zentrack.onrender.com/login?error=auth_failed",
   }),
   (req, res) => {
-    res.redirect(`${FRONTEND_URL}/dashboard?oauth_success=true`);
+    res.redirect(
+      "https://zentrack-rust.vercel.app/dashboard?oauth_success=true"
+    );
   }
 );
 
@@ -120,5 +114,5 @@ app.get("/api/me", ensureAuth, (req, res) => {
 });
 
 // ===== PORT =====
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

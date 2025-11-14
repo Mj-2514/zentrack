@@ -21,7 +21,7 @@ const routes = [
       description: 'Track your daily habits, set goals, and build lasting routines with ZenTrack — the ultimate habit tracker for productivity and personal growth.',
       keywords: 'habit tracker, daily habits app, build discipline, productivity tools, habit journal, self improvement, routine tracker',
       image: '/zentrack-cover.png',
-      canonical: 'https://yourdomain.com/'
+      canonical: 'https://zentrack-rust.vercel.app//'
     }
   },
   {
@@ -31,7 +31,7 @@ const routes = [
     meta: {
       title: 'Dashboard - ZenTrack',
       description: 'Your personal productivity dashboard — insights, stats, and progress.',
-      canonical: 'https://yourdomain.com/dashboard'
+      canonical: 'https://zentrack-rust.vercel.app//dashboard'
     }
   },
   {
@@ -41,7 +41,7 @@ const routes = [
     meta: {
       title: 'My Habits - ZenTrack',
       description: 'View and manage all your daily habits.',
-      canonical: 'https://yourdomain.com/habits'
+      canonical: 'https://zentrack-rust.vercel.app//habits'
     }
   },
   {
@@ -51,7 +51,7 @@ const routes = [
     meta: {
       title: 'Add Habit - ZenTrack',
       description: 'Add a new habit and start your journey toward self-mastery.',
-      canonical: 'https://yourdomain.com/add-habit'
+      canonical: 'https://zentrack-rust.vercel.app//add-habit'
     }
   },
   {
@@ -61,7 +61,7 @@ const routes = [
     meta: {
       title: 'Habit Entries - ZenTrack',
       description: 'Track your mood and progress with daily entries.',
-      canonical: 'https://yourdomain.com/entries'
+      canonical: 'https://zentrack-rust.vercel.app//entries'
     }
   },
   {
@@ -71,7 +71,7 @@ const routes = [
     meta: {
       title: 'Habit Details - ZenTrack',
       description: 'Dive deep into your habit’s progress.',
-      canonical: 'https://yourdomain.com/habit'
+      canonical: 'https://zentrack-rust.vercel.app//habit'
     }
   }
 ]
