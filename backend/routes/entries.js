@@ -20,7 +20,25 @@ router.post("/add", ensureAuth, async (req, res) => {
     res.status(500).json({ message: "Server error creating entry" });
   }
 });
-
+// Add this to your entries routes temporarily
+router.get("/test/public", async (req, res) => {
+  try {
+    console.log("=== 🔓 PUBLIC TEST ENDPOINT HIT ===");
+    
+    const entries = await Entry.find({});
+    console.log("📋 Found entries:", entries.length);
+    
+    res.json({
+      message: "Public test successful",
+      totalEntries: entries.length,
+      entries: entries
+    });
+    
+  } catch (err) {
+    console.error("Test error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 
 // Get entries for the logged-in user

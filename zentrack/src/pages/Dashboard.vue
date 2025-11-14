@@ -3,33 +3,17 @@
     <div class="max-w-6xl mx-auto space-y-8">
 
       <!-- Welcome Section -->
-      <div
-        v-if="user"
-        class="bg-gray-800 rounded-xl p-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4"
-      >
+      <div v-if="user" class="bg-gray-800 rounded-xl p-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
           <h1 class="text-2xl font-bold">
             Welcome back,
-            <span
-              class="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent"
-              >{{ user.name }}</span
-            >! 👋
+            <span class="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">{{ user.name }}</span>! 👋
           </h1>
-          <p class="text-gray-300 mt-1">
-            Your habit journey continues here. Let's make today count!
-          </p>
+          <p class="text-gray-300 mt-1">Your habit journey continues here. Let's make today count!</p>
         </div>
         <div class="flex gap-3 flex-wrap">
-          <router-link
-            to="/habits"
-            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition"
-            >View My Habits</router-link
-          >
-          <router-link
-            to="/habits?new=true"
-            class="border border-gray-400 hover:bg-gray-700 px-4 py-2 rounded-lg font-semibold transition"
-            >+ New Habit</router-link
-          >
+          <router-link to="/habits" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">View My Habits</router-link>
+          <router-link to="/habits?new=true" class="border border-gray-400 hover:bg-gray-700 px-4 py-2 rounded-lg font-semibold transition">+ New Habit</router-link>
         </div>
       </div>
 
@@ -72,9 +56,10 @@
           <p class="text-gray-400">{{ currentDate }}</p>
         </div>
 
-        <div v-if="allEntries.length" class="space-y-3">
+        <!-- Use filteredUserEntries instead of allEntries -->
+        <div v-if="filteredUserEntries.length" class="space-y-3">
           <div
-            v-for="entry in allEntries"
+            v-for="entry in filteredUserEntries.slice(0, 5)"
             :key="entry._id"
             class="bg-gray-800 p-4 rounded-lg flex justify-between items-center"
           >
@@ -99,6 +84,7 @@
         <div v-else class="text-center text-gray-400 py-10">
           <div class="text-4xl mb-2">📭</div>
           <p>No entries yet</p>
+          <p class="text-sm mt-2">Total entries in system: {{ allEntries.length }}</p>
         </div>
       </div>
 
@@ -127,7 +113,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useAuth } from '../services/auth.js'
@@ -136,7 +121,8 @@ import { habitsAPI, entriesAPI } from '../services/api.js'
 const { user } = useAuth()
 
 const habits = ref([])
-const allEntries = ref([])
+const allEntries = ref([]) // This will store ALL entries from API
+const userEntries = ref([]) // This will store filtered entries for current user
 const recentActivity = ref([])
 const stats = ref({
   activeHabits: 0,
@@ -155,42 +141,81 @@ const currentDate = computed(() =>
   })
 )
 
+// Filter entries for current user on frontend
+const filteredUserEntries = computed(() => {
+  if (!user.value || !allEntries.value.length) return []
+  
+  console.log("🔍 Filtering entries for user:", user.value.id)
+  console.log("📋 All entries available:", allEntries.value)
+  
+  // Since your entries don't have userId, we'll use a different approach
+  // Option 1: Show all entries (if that's acceptable)
+  const entries = allEntries.value
+  
+  // Option 2: If you have another way to associate entries with users, filter here
+  // For example, if entries are associated with habits that have userId:
+  // const userHabitIds = habits.value.filter(h => h.userId === user.value.id).map(h => h._id)
+  // const entries = allEntries.value.filter(entry => userHabitIds.includes(entry.habitId))
+  
+  console.log("✅ Filtered entries:", entries.length)
+  return entries
+})
+
 // Fetch dashboard data
 const fetchDashboard = async () => {
   if (!user.value) return
   loading.value = true
 
   try {
+    console.log('🔄 Starting dashboard fetch for user:', user.value.id)
+    
     // Fetch all habits
+    console.log('📊 Fetching habits...')
     const habitsRes = await habitsAPI.getAllHabits()
     habits.value = habitsRes.data || []
+    console.log('✅ Habits loaded:', habits.value.length)
 
-    // Fetch entries
+    // Fetch ALL entries (backend will return all since no userId filter works)
+    console.log('📝 Fetching entries...')
     const entriesRes = await entriesAPI.getAllEntries()
+    console.log('📦 Raw entries response:', entriesRes)
+    
     allEntries.value = (entriesRes.data || []).sort(
       (a, b) => new Date(b.date) - new Date(a.date)
     )
+    
+    console.log('✅ All entries loaded:', allEntries.value.length)
+    console.log('👤 Current user ID:', user.value.id)
+    console.log('📋 Entries data sample:', allEntries.value.slice(0, 3))
 
-    // Compute stats
+    // Use the filtered entries for stats and display
+    const entriesToUse = filteredUserEntries.value
+    
+    // Compute stats using the filtered entries
     stats.value.activeHabits = habits.value.length
-    stats.value.currentStreak = computeCurrentStreak(allEntries.value)
-    stats.value.completionRate = computeCompletionRate(allEntries.value, habits.value)
-    stats.value.goalsAchieved = computeGoalsAchieved(habits.value, allEntries.value)
+    stats.value.currentStreak = computeCurrentStreak(entriesToUse)
+    stats.value.completionRate = computeCompletionRate(entriesToUse, habits.value)
+    stats.value.goalsAchieved = computeGoalsAchieved(habits.value, entriesToUse)
 
-    // Build recent activity
-    recentActivity.value = allEntries.value.slice(0, 5).map(entry => ({
+    console.log('📈 Stats computed:', stats.value)
+
+    // Build recent activity from filtered entries
+    recentActivity.value = entriesToUse.slice(0, 5).map(entry => ({
       ...entry,
       text: `Completed "${getHabitTitle(entry.habitId)}"`,
       type: 'habit_completed'
     }))
+
+    console.log('🎯 Recent activity:', recentActivity.value.length)
+
   } catch (err) {
-    console.error('Dashboard fetch error:', err)
+    console.error('💥 Dashboard fetch error:', err)
   } finally {
     loading.value = false
   }
 }
 
-// Helpers
+// Helper functions
 const getHabitTitle = habitId => {
   const habit = habits.value.find(h => h._id === habitId)
   return habit ? habit.title : 'Unknown Habit'
