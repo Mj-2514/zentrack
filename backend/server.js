@@ -59,7 +59,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Auth status endpoint
-app.get("/auth/status", (req, res) => {
+app.get("https://zentrack-rust.vercel.app/auth/status", (req, res) => {
   
   if (req.isAuthenticated()) {
     res.json({
@@ -94,7 +94,7 @@ app.get("/auth/user", (req, res) => {
 });
 
 // ✅ Auth routes
-app.get("/auth/google", passport.authenticate("google", { 
+app.get("https://zentrack-rust.vercel.app/auth/google", passport.authenticate("google", { 
   scope: ["profile", "email"] 
 }));
 
@@ -120,10 +120,10 @@ app.get("/logout", (req, res, next) => {
 });
 
 // API routes
-app.use("/api/habits", habits);
+app.use("https://zentrack.onrender.com/api/habits", habits);
 app.use("/api/entries", entries);
 
-app.get("/api/me", ensureAuth, (req, res) => {
+app.get("https://zentrack.onrender.com/api/me", ensureAuth, (req, res) => {
   res.json(req.user);
 });
 
