@@ -25,7 +25,7 @@ app.use(compression());
 // ===== CORS =====
 app.use(
   cors({
-    origin: "https://zentrack-rust.vercel.app",
+    origin: "https://zentrack-rust.vercel.app" || "http://localhost:5173",
     credentials: true,
   })
 );
@@ -88,7 +88,7 @@ app.get(
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "https://zentrack-rust.vercel.app/login?error=auth_failed",
+    failureRedirect: "https://zentrack.onrender.com/login?error=auth_failed",
   }),
   (req, res) => {
     res.redirect(
@@ -114,5 +114,5 @@ app.get("/api/me", ensureAuth, (req, res) => {
 });
 
 // ===== PORT =====
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
