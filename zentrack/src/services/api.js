@@ -1,7 +1,7 @@
 // services/api.js - VERIFY THIS CONFIGURATION
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:5000/api'
+const API_BASE_URL = 'https://zentrack.onrender.com/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -27,7 +27,7 @@ export const entriesAPI = {
 
 // Auth API
 export const authAPI = {
-  googleAuth: () => window.location.href = 'http://localhost:5000/auth/google',
+  googleAuth: () => window.location.href = 'https://zentrack.onrender.com/auth/google',
   logout: () => api.get('/logout')
 }
 

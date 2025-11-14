@@ -26,7 +26,7 @@ app.use(compression());
 
 // ✅ CORS middleware must come before routes
 app.use(cors({
-  origin: 'http://localhost:5173', // Your Vite frontend URL
+  origin: 'https://zentrack-rust.vercel.app/', // Your Vite frontend URL
   credentials: true, // Important for sessions
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
@@ -101,12 +101,12 @@ app.get("/auth/google", passport.authenticate("google", {
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", { 
-    failureRedirect: "http://localhost:5173/login?error=auth_failed",
+    failureRedirect: "https://zentrack-rust.vercel.app/login?error=auth_failed",
     failureMessage: true 
   }),
   (req, res) => {
     // Successful authentication - redirect to frontend dashboard
-    res.redirect("http://localhost:5173/dashboard?oauth_success=true");
+    res.redirect("https://zentrack-rust.vercel.app/dashboard?oauth_success=true");
   }
 );
 

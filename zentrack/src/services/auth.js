@@ -6,7 +6,7 @@ const isAuthenticated = ref(false)
 export const useAuth = () => {
   const checkAuth = async () => {
     try {
-      const response = await fetch('http://localhost:5000/auth/status', {
+      const response = await fetch('https://zentrack.onrender.com/auth/status', {
         credentials: 'include'
       })
       
@@ -27,12 +27,12 @@ export const useAuth = () => {
 
   const loginWithGoogle = () => {
     // Open Google OAuth in the same window
-    window.location.href = 'http://localhost:5000/auth/google'
+    window.location.href = 'https://zentrack.onrender.com/auth/google'
   }
 
   const logout = async () => {
     try {
-      const response = await fetch('http://localhost:5000/logout', {
+      const response = await fetch('https://zentrack.onrender.com/logout', {
         credentials: 'include'
       })
       
